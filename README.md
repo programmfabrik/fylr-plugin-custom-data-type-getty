@@ -6,9 +6,19 @@ developers.
 
 # easydb-custom-data-type-getty
 
-This is a plugin for [easyDB 5](http://5.easydb.de/) with Custom Data Type `CustomDataTypeGetty` for references to entities of the [Getty Vocabularys](http://vocab.getty.edu/).
+This is a plugin for [fylr](https://docs.fylr.io/) with Custom Data Type `CustomDataTypeGetty` for references to entities of the [Getty Vocabularies](https://www.getty.edu/research/tools/vocabularies/).
 
-The Plugins uses <http://ws.gbv.de/suggest/getty/> for the autocomplete-suggestions. <http://ws.gbv.de/suggest/getty/> communicates live with getty's sparql-endpoint and works as a proxy.
+⚠️ For easydb5-instances use [easydb-custom-data-type-getty](https://github.com/programmfabrik/easydb-custom-data-type-getty).
+
+The Plugins uses <https://ws.gbv.de/suggest/getty/> for the autocomplete-suggestions.
+
+## installation
+
+The latest version of this plugin can be found [here](https://github.com/programmfabrik/fylr-plugin-custom-data-type-getty/releases/latest/download/customDataTypeGetty.zip).
+
+The ZIP can be downloaded and installed using the plugin manager, or used directly (recommended).
+
+Github has an overview page to get a list of [all releases](https://github.com/programmfabrik/fylr-plugin-custom-data-type-getty/releases/).
 
 ## configuration
 
