@@ -1,0 +1,45 @@
+plugin:
+  name: custom-data-type-getty
+  version: 2.0
+  url: https://github.com/programmfabrik/fylr-plugin-custom-data-type-getty
+  displayname:
+    de-DE: getty-Verknüpfung
+    en-US: getty-Referencing
+  info:
+    de-DE: Stellt Verknüpfungen mit den Normdateien von Getty her.
+    en-US: Use for references to entities of the getty-authorityfiles.
+  l10n: l10n/customDataTypeGetty.csv
+  webfrontend:
+    url: customDataTypeGetty.js
+    css: customDataTypeGetty.css
+    
+base_url_prefix: "webfrontend"
+
+custom_types:
+  getty:
+    mapping:
+      conceptName:
+        type: text
+      conceptURI:
+        type: text
+      conceptGeoJSON:
+        type: geo_json
+    config:
+      schema:
+        - name: add_aat
+          parameters:
+            value:
+              type: bool
+        - name: add_tgn
+          parameters:
+            value:
+              type: bool
+        - name: add_ulan
+          parameters:
+            value:
+              type: bool
+        - name: start_parent_id
+          parameters:
+            value:
+              type: text
+      mask:
