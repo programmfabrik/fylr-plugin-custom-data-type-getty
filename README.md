@@ -4,7 +4,7 @@ Programmfabrik GmbH. Please use the github issue tracking to report bugs
 and self organize bug fixing. Feel free to directly contact the committing
 developers.
 
-# easydb-custom-data-type-getty
+# custom-data-type-getty
 
 This is a plugin for [fylr](https://docs.fylr.io/) with Custom Data Type `CustomDataTypeGetty` for references to entities of the [Getty Vocabularies](https://www.getty.edu/research/tools/vocabularies/).
 
