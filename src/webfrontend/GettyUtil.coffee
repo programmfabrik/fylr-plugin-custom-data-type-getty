@@ -30,6 +30,10 @@ class GettyUtil
       l10nObject[l10nObjectKey] = object._label
 
     _standard.l10ntext = l10nObject
+    
+    geoJSON = @getGeoJSONFromGettyJSON object
+    if geoJSON
+       _standard.geo =  geoJSON
 
     return _standard
 
@@ -101,5 +105,4 @@ class GettyUtil
                         type: "Point"
                         coordinates: coordinates
 
-    #geoJSON = JSON.parse('{ "type": "FeatureCollection", "features": [ { "type": "Feature", "geometry": { "type": "Polygon", "coordinates": [ [ [ 16.2953092403489, 5.877002745532067 ], [ 16.2953092403489, -6.130023633976933 ], [ 29.467584082107635, -6.130023633976933 ], [ 29.467584082107635, 5.877002745532067 ], [ 16.2953092403489, 5.877002745532067 ] ] ] }, "properties": {} } ] }');
     return geoJSON

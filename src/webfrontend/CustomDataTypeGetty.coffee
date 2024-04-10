@@ -225,7 +225,6 @@ class CustomDataTypeGetty extends CustomDataTypeWithCommons
                 geoJSON = GettyUtil.getGeoJSONFromGettyJSON data
                 if geoJSON
                   cdata.conceptGeoJSON = geoJSON
-                console.log "cdata", cdata
                 # update the layout in form
                 that.__updateResult(cdata, layout, opts)
                 # hide suggest-menu
