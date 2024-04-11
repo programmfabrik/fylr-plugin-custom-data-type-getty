@@ -12,6 +12,11 @@ class CustomDataTypeGetty extends CustomDataTypeWithCommons
     $$("custom.data.type.getty.name")
 
   #######################################################################
+  # support geostandard in frontend?
+  supportsGeoStandard: ->
+    return true
+    
+  #######################################################################
   # get frontend-language
   getFrontendLanguage: () ->
     # language
