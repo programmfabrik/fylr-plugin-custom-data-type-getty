@@ -1,4 +1,52 @@
 class GettyUtil
+    
+  # from https://github.com/programmfabrik/coffeescript-ui/blob/fde25089327791d9aca540567bfa511e64958611/src/base/util.coffee#L506
+  # has to be reused here, because cui not be used in updater
+  @isEqual: (x, y, debug) ->
+    #// if both are function
+    if x instanceof Function
+      if y instanceof Function
+        return x.toString() == y.toString()
+      return false
+
+    if x == null or x == undefined or y == null or y == undefined
+      return x == y
+
+    if x == y or x.valueOf() == y.valueOf()
+      return true
+
+    # if one of them is date, they must had equal valueOf
+    if x instanceof Date
+      return false
+
+    if y instanceof Date
+      return false
+
+    # if they are not function or strictly equal, they both need to be Objects
+    if not (x instanceof Object)
+      return false
+
+    if not (y instanceof Object)
+      return false
+
+    p = Object.keys(x)
+    if Object.keys(y).every( (i) -> return p.indexOf(i) != -1 )
+      return p.every((i) =>
+        eq = @isEqual(x[i], y[i], debug)
+        if not eq
+          if debug
+            console.debug("X: ",x)
+            console.debug("Differs to Y:", y)
+            console.debug("Key differs: ", i)
+            console.debug("Value X:", x[i])
+            console.debug("Value Y:", y[i])
+          return false
+        else
+          return true
+      )
+    else
+      return false
+    
   @getStandardFromGettyJSON: (context, object, cdata, databaseLanguages = false) ->
     if databaseLanguages == false
       databaseLanguages = ez5.loca.getDatabaseLanguages()
@@ -69,7 +117,8 @@ class GettyUtil
     # parse all altlabels
     if object.identified_by
       for altInfo in object.identified_by
-        fullTextString += altInfo.content + ' '
+        if altInfo.content
+            fullTextString += altInfo.content + ' '
 
     for l10nObjectWithShortenedLanguagesKey, l10nObjectWithShortenedLanguagesValue of l10nObjectWithShortenedLanguages
       l10nObjectWithShortenedLanguages[l10nObjectWithShortenedLanguagesKey] = fullTextString

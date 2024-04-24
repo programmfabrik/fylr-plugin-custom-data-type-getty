@@ -52,6 +52,11 @@ As defined in `manifest.yml` this datatype can be configured:
 * _standard
     * easydb-standard
 
+## updater
+Note: The automatic nightly updater is implemented and can be configured in the baseconfig. You need to enable the "custom-data-type"-update-service globally too.
+
+
+
 ## sources
 
 The source code of this plugin is managed in a git repository at <https://github.com/programmfabrik/easydb-custom-data-type-getty>. Please use [the issue tracker](https://github.com/programmfabrik/easydb-custom-data-type-getty/issues) for bug reports and feature requests!

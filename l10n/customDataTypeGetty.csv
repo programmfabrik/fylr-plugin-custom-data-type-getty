@@ -33,3 +33,8 @@ custom.data.type.getty.config.parameter.mask.infopop.labels.broader,Übergeordne
 custom.data.type.getty.config.parameter.mask.infopop.labels.preflabel,Bezeichnung,Preferred label,,
 custom.data.type.getty.config.parameter.mask.infopop.labels.note,Notiz,Note,,
 custom.data.type.getty.config.parameter.schema.start_parent_id.value.label,startParentID,startParentID,,
+server.config.name.system.update_interval_getty,getty-Update-Einstellungen,getty-Update-Settings,,
+server.config.parameter.system.update_interval_getty.days.label,Tage zwischen Updates,Days between updates,,
+custom.data.type.getty.config.parameter.mask.editor_display.value.label,Editor-Ansicht,Editor-Display,,
+custom.data.type.getty.config.option.mask.editor_display.value.default,Standard,Default,,
+custom.data.type.getty.config.option.mask.editor_display.value.condensed,1 Zeile,One-liner,,

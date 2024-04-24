@@ -19,7 +19,7 @@ build: clean ## clean, compile, copy files to build folder
 				mkdir -p build
 				mkdir -p build/$(PLUGIN_NAME)
 				mkdir -p build/$(PLUGIN_NAME)/webfrontend
-				#mkdir -p build/$(PLUGIN_NAME)/updater
+				mkdir -p build/$(PLUGIN_NAME)/updater
 				mkdir -p build/$(PLUGIN_NAME)/l10n
 
 				mkdir -p src/tmp # build code from coffee
@@ -34,8 +34,8 @@ build: clean ## clean, compile, copy files to build folder
 				cat src/tmp/CustomDataTypeGettyFacet.js >> build/$(PLUGIN_NAME)/webfrontend/customDataTypeGetty.js
 				cat src/tmp/GettyUtil.js >> build/$(PLUGIN_NAME)/webfrontend/customDataTypeGetty.js
 
-                #cp src/updater/GettyUpdater.js build/$(PLUGIN_NAME)/updater/GettyUpdater.js # build updater
-				#cat src/tmp/GettyUtil.js >> build/$(PLUGIN_NAME)/updater/GettyUpdater.js
+				cp src/updater/GettyUpdater.js build/$(PLUGIN_NAME)/updater/GettyUpdater.js # build updater
+				cat src/tmp/GettyUtil.js >> build/$(PLUGIN_NAME)/updater/GettyUpdater.js
 				cp package.json build/$(PLUGIN_NAME)/package.json
 				cp -r node_modules build/$(PLUGIN_NAME)/
 				rm -rf src/tmp # clean tmp
