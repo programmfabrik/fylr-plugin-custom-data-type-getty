@@ -39,6 +39,7 @@ As defined in `manifest.yml` this datatype can be configured:
 ### Mask options
 
 * whether additional informationen is loaded if the mouse hovers a suggestion in the search result
+* editordisplay: default or condensed (oneline)
 
 ## saved data
 * conceptName
