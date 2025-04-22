@@ -214,7 +214,29 @@ outputErr = (err2) => {
   let data = ""
 
   process.stdin.setEncoding('utf8');
+  ////////////////////////////////////////////////////////////////////////////
+  // check if hour-restriction is set
+  ////////////////////////////////////////////////////////////////////////////
 
+  if (info?.config?.plugin?.['custom-data-type-getty']?.config?.update_getty?.restrict_time === true) {
+    getty_config = info.config.plugin['custom-data-type-getty'].config.update_getty;
+    // check if hours are configured
+    if (getty_config?.from_time !== false && getty_config?.to_time !== false) {
+      const now = new Date();
+      const hour = now.getHours();
+      // check if hours do not match
+      if (hour < getty_config.from_time && hour >= getty_config.to_time) {
+        // exit if hours do not match
+        outputData({
+          "state": {
+            "theend": 2,
+            "log": ["hours do not match, cancel update"]
+          }
+        });
+      }
+    }
+  }
+  
   access_token = info && info.plugin_user_access_token;
 
   if(access_token) {
