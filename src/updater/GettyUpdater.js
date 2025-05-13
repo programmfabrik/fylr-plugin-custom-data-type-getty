@@ -142,7 +142,10 @@ main = (payload) => {
             resultJSON = matchingRecordData.data;
             if (resultJSON) {
               // get desired language for preflabel. This is frontendlanguage from original data...
-              let desiredLanguage = originalCdata.frontendLanguage;
+              let desiredLanguage = 'de';
+              if(originalCdata?.frontendLanguage?.length == 2) {
+                desiredLanguage = originalCdata.frontendLanguage;
+              }
               // save conceptName
               newCdata.conceptName = originalCdata.conceptName;
               // save conceptURI
@@ -158,8 +161,8 @@ main = (payload) => {
               newCdata._fulltext = GettyUtil.getFullTextFromGettyJSON(resultJSON, databaseLanguages);
               // save _standard
               newCdata._standard = GettyUtil.getStandardFromGettyJSON(null, resultJSON, newCdata, databaseLanguages);
-              // save frontend language (same as given)
-              newCdata.frontendLanguage = originalCdata.frontendLanguage;
+              // save frontend language (same as given or default)
+              newCdata.frontendLanguage = desiredLanguage;
               if (hasChanges(payload.objects[index].data, newCdata)) {
                 payload.objects[index].data = newCdata;
               } else {}
