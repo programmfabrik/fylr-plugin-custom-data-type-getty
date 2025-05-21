@@ -154,4 +154,10 @@ class GettyUtil
                         type: "Point"
                         coordinates: coordinates
 
+    if geoJSON
+      geoJSON =       
+        type: "Feature"      
+        properties: {},      
+        geometry: geoJSON 
+
     return geoJSON
