@@ -2,8 +2,7 @@ ZIP_NAME ?= "customDataTypeGetty.zip"
 PLUGIN_NAME = "custom-data-type-getty"
 
 # coffescript-files to compile
-COFFEE_FILES = commons.coffee \
-	CustomDataTypeGetty.coffee \
+COFFEE_FILES = CustomDataTypeGetty.coffee \
 	CustomDataTypeGettyFacet.coffee \
 	GettyUtil.coffee
 
@@ -25,12 +24,8 @@ build: clean buildinfojson ## clean, compile, copy files to build folder
 				cp build-info.json build/$(PLUGIN_NAME)/build-info.json # build-info
 
 				mkdir -p src/tmp # build code from coffee
-				cp easydb-library/src/commons.coffee src/tmp
 				cp src/webfrontend/*.coffee src/tmp
 				cd src/tmp && coffee -b --compile ${COFFEE_FILES} # bare-parameter is obligatory!
-
-				# first: commons! Important
-				cat src/tmp/commons.js > build/$(PLUGIN_NAME)/webfrontend/customDataTypeGetty.js
 
 				cat src/tmp/CustomDataTypeGetty.js >> build/$(PLUGIN_NAME)/webfrontend/customDataTypeGetty.js
 				cat src/tmp/CustomDataTypeGettyFacet.js >> build/$(PLUGIN_NAME)/webfrontend/customDataTypeGetty.js
@@ -42,34 +37,7 @@ build: clean buildinfojson ## clean, compile, copy files to build folder
 				cp -r node_modules build/$(PLUGIN_NAME)/
 				rm -rf src/tmp # clean tmp
 
-				mkdir src/temp_localization
-				cp l10n/customDataTypeGetty.csv src/temp_localization
-				cp easydb-library/src/commons.l10n.csv src/temp_localization
-
-				# equalize number of columns in localization csv files
-				@file1=src/temp_localization/customDataTypeGetty.csv \
-				file2=src/temp_localization/commons.l10n.csv \
-				cols1=$$(head -n 1 $$file1 | awk -F',' '{print NF}'); \
-				cols2=$$(head -n 1 $$file2 | awk -F',' '{print NF}'); \
-				echo "File1 columns: $$cols1, File2 columns: $$cols2"; \
-				if [ $$cols1 -lt $$cols2 ]; then \
-					diff=$$((cols2 - cols1)); \
-					echo "Padding $$file1 with $$diff empty columns..."; \
-					commas=$$(printf '%.0s,' $$(seq 1 $$diff)); \
-					sed -i "s/$$/$$commas/" $$file1; \
-				elif [ $$cols2 -lt $$cols1 ]; then \
-					diff=$$((cols1 - cols2)); \
-					echo "Padding $$file2 with $$diff empty columns..."; \
-					commas=$$(printf '%.0s,' $$(seq 1 $$diff)); \
-					sed -i "s/$$/$$commas/" $$file2; \
-				else \
-					echo "Files already have equal columns."; \
-				fi
-
-				cp src/temp_localization/customDataTypeGetty.csv build/$(PLUGIN_NAME)/l10n/customDataTypeGetty.csv # copy l10n
-				echo "" >> build/$(PLUGIN_NAME)/l10n/customDataTypeGetty.csv # add line break to make sure csv is not broken after merge
-				tail -n+2 src/temp_localization/commons.l10n.csv >> build/$(PLUGIN_NAME)/l10n/customDataTypeGetty.csv 
-				rm -rf src/temp_localization
+				cp l10n/customDataTypeGetty.csv build/$(PLUGIN_NAME)/l10n/customDataTypeGetty.csv # copy l10n
 
 				cp src/webfrontend/css/main.css build/$(PLUGIN_NAME)/webfrontend/customDataTypeGetty.css # copy css
 				cp manifest.master.yml build/$(PLUGIN_NAME)/manifest.yml # copy manifest

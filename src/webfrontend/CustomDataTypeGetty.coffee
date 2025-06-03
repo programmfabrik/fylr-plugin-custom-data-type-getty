@@ -1,4 +1,4 @@
-class CustomDataTypeGetty extends CustomDataTypeWithCommons
+class CustomDataTypeGetty extends CustomDataTypeWithCommonsAsPlugin
 
   #######################################################################
   # return name of plugin
