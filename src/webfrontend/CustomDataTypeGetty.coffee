@@ -25,6 +25,12 @@ class CustomDataTypeGetty extends CustomDataTypeWithCommonsAsPlugin
     return true
     
   #######################################################################
+  # returns the databaseLanguages
+  getDatabaseLanguages: () ->
+    databaseLanguages = ez5.loca.getLanguageControl().getLanguages().slice()
+    return databaseLanguages
+
+  #######################################################################
   # get frontend-language
   getFrontendLanguage: () ->
     # language
@@ -235,6 +241,9 @@ class CustomDataTypeGetty extends CustomDataTypeWithCommonsAsPlugin
                 cdata._fulltext = GettyUtil.getFullTextFromGettyJSON data, false
                 cdata._standard = GettyUtil.getStandardFromGettyJSON that, data, cdata, false
 
+                # facets
+                cdata.facetTerm = GettyUtil.getFacetTerm data, that.getDatabaseLanguages()
+
                 geoJSON = GettyUtil.getGeoJSONFromGettyJSON data
                 if geoJSON
                   cdata.conceptGeoJSON = geoJSON
@@ -242,6 +251,7 @@ class CustomDataTypeGetty extends CustomDataTypeWithCommonsAsPlugin
                 that.__updateResult(cdata, layout, opts)
                 # hide suggest-menu
                 suggest_Menu.hide()
+
                 # close popover
                 if that.popover
                   that.popover.hide()
