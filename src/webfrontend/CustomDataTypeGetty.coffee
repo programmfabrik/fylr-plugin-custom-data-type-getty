@@ -71,7 +71,7 @@ class CustomDataTypeGetty extends CustomDataTypeWithCommonsAsPlugin
     uri = 'http://vocab.getty.edu/' + gettyType + '/' + gettyID + '.json'
     
     # start new request
-    xurl = location.protocol + '//jsontojsonp.gbv.de/?url=' + uri
+    xurl = 'https://jsontojsonp.gbv.de/?url=' + uri
     
     extendedInfo_xhr = new (CUI.XHR)(url: xurl)
     extendedInfo_xhr.start()
@@ -190,7 +190,7 @@ class CustomDataTypeGetty extends CustomDataTypeWithCommonsAsPlugin
           searchsuggest_xhr.xhr.abort()
 
       # start new request
-      searchsuggest_xhr.xhr = new (CUI.XHR)(url: location.protocol + '//ws.gbv.de/suggest/getty/?searchstring=' + getty_searchterm + '&voc=' + getty_searchtype + '&count=' + getty_countSuggestions + startParentID)
+      searchsuggest_xhr.xhr = new (CUI.XHR)(url: 'https://ws.gbv.de/suggest/getty/?searchstring=' + getty_searchterm + '&voc=' + getty_searchtype + '&count=' + getty_countSuggestions + startParentID)
       searchsuggest_xhr.xhr.start().done((data, status, statusText) ->
 
           # init xhr for tooltipcontent
@@ -234,7 +234,7 @@ class CustomDataTypeGetty extends CustomDataTypeWithCommonsAsPlugin
 
               # try to get better fulltext
               encodedURL = encodeURIComponent(cdata.conceptURI + '.json')
-              dataEntry_xhr = new (CUI.XHR)(url: location.protocol + '//jsontojsonp.gbv.de/?url=' + encodedURL)
+              dataEntry_xhr = new (CUI.XHR)(url: 'https://jsontojsonp.gbv.de/?url=' + encodedURL)
               dataEntry_xhr.start().done((data, status, statusText) ->
 
                 # _standard & _fulltext
