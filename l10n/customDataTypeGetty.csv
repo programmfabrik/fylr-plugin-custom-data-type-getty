@@ -38,6 +38,7 @@ server.config.parameter.system.update_getty.restrict_time.label,Beschränke Upda
 server.config.parameter.system.update_getty.restrict_time.checkbox,Ja - beschränken,Yes - restrict,,
 server.config.parameter.system.update_getty.from_time.label,Stunde von (Zahl 0-24),Hour from (Int 0-24),,
 server.config.parameter.system.update_getty.to_time.label,Stunde bis (Zahl 0-24),Hour to (Int 0-24),,
+server.config.parameter.system.update_getty.custom_expires_days.label,Datengültigkeit (in Tagen),Data expires in (in days),,
 custom.data.type.getty.config.parameter.mask.editor_display.value.label,Editor-Ansicht,Editor-Display,,
 custom.data.type.getty.config.option.mask.editor_display.value.default,Standard,Default,,
 custom.data.type.getty.config.option.mask.editor_display.value.condensed,1 Zeile,One-liner,,
