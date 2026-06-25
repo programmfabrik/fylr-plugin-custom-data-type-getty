@@ -24,10 +24,13 @@ custom_types:
         type: text
       conceptURI:
         type: text
+        skipTerms: true
       conceptGeoJSON:
         type: geo_json
+        skipTerms: true
       facetTerm:
         type: text_l10n
+        skipTerms: true
     config:
       schema:
         - name: add_aat
