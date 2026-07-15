@@ -6,15 +6,27 @@ plugin:
     de-DE: getty-Verknüpfung
     en-US: getty-Referencing
   info:
-    de-DE: Stellt Verknüpfungen mit den Normdateien von Getty her.
-    en-US: Use for references to entities of the getty-authorityfiles.
+    de-DE: |
+      Stellt einen eigenen Feldtyp bereit, mit dem Datensätze mit Konzepten der [Getty Vocabularies](https://www.getty.edu/research/tools/vocabularies/) verknüpft werden. Redakteure suchen und hinterlegen eine eindeutige Referenz, statt Begriffe als Freitext zu erfassen.
+
+      - Auswahl der genutzten Vokabulare: AAT, TGN und/oder ULAN
+      - Suche optional auf einen Startknoten innerhalb eines hierarchischen Vokabulars eingrenzen
+      - Optionale Vorschau mit Zusatzinformationen beim Überfahren eines Vorschlags
+      - Optionaler nächtlicher Updater hält die Daten mit der Getty-Quelle synchron
+    en-US: |
+      Adds a custom data type for linking records to concepts in the [Getty Vocabularies](https://www.getty.edu/research/tools/vocabularies/). Editors search and attach an authoritative reference instead of typing terms as free text.
+
+      - Choose which vocabularies a field uses: AAT, TGN and/or ULAN
+      - Optionally scope the search to a starting node within a hierarchical vocabulary
+      - Optional hover preview with additional information on each suggestion
+      - Optional nightly updater keeps stored data in sync with the Getty source
   l10n: l10n/customDataTypeGetty.csv
   webfrontend:
     url: customDataTypeGetty.js
     css: customDataTypeGetty.css
     dependencies:
       - commons-library
-    
+
 base_url_prefix: "webfrontend"
 
 custom_types:
@@ -100,4 +112,4 @@ base_config:
         type: int
         min: 1
         default: 1
-        position: 3        
+        position: 3
