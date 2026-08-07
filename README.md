@@ -14,7 +14,7 @@ The Plugins uses <https://ws.gbv.de/suggest/getty/> for the autocomplete-suggest
 
 ## installation
 
-The latest version of this plugin can be found [here](https://github.com/programmfabrik/fylr-plugin-custom-data-type-getty/releases/latest/download/customDataTypeGetty.zip).
+The latest version of this plugin can be found [here](https://github.com/programmfabrik/fylr-plugin-custom-data-type-getty/releases/latest/download/fylr-plugin-custom-data-type-getty.zip).
 
 The ZIP can be downloaded and installed using the plugin manager, or used directly (recommended).
 
