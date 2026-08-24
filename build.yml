@@ -11,18 +11,23 @@
 server:
   install:
   - l10n/customDataTypeGetty.csv
+  # assembled server-side files, sources in the order written
+  bundles:
+    - out: updater/GettyUpdater.js
+      sources:
+      - src/updater/GettyUpdater.js
+      - webfrontend/GettyUtil.coffee
 webfrontend:
-  coffee1:
-  - webfrontend/CustomDataTypeGetty.coffee
-  - webfrontend/CustomDataTypeGettyFacet.coffee
-  - webfrontend/GettyUtil.coffee
+  # assembled into plugin.webfrontend.url, in this order:
+  # .coffee is compiled (CoffeeScript 1.x), .scss compiled,
+  # anything else taken verbatim
+  bundles:
+    - sources:
+        - webfrontend/CustomDataTypeGetty.coffee
+        - webfrontend/CustomDataTypeGettyFacet.coffee
+        - webfrontend/GettyUtil.coffee
   install:
   - webfrontend/customDataTypeGetty.css
-build:
-  bundles:
-  - out: updater/GettyUpdater.js
-    sources:
-    - src/updater/GettyUpdater.js
-    - webfrontend/GettyUtil.coffee
-  zip_aliases:
-  - customDataTypeGetty.zip
+
+zip_aliases:
+- customDataTypeGetty.zip
