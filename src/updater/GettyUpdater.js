@@ -67,6 +67,13 @@ function getNewCustomExpiresAt() {
   return newExpiresAt.toISOString()
 }
 
+function getGettyDetailUrl(uri) {
+  const uriParts = uri.split('/');
+  const gettyID = uriParts.pop();
+  const gettyType = uriParts.pop();
+  return 'https://uri.gbv.de/terminology/getty/' + gettyType + '/' + gettyID + '?format=json';
+}
+
 main = (payload) => {
   switch (payload.action) {
     case "start_update":
@@ -94,7 +101,7 @@ main = (payload) => {
       let requests = [];
 
       URIList.forEach((uri) => {
-        let dataRequestUrl = 'https://jsontojsonp.gbv.de/?url=' + encodeURIComponent(uri) + '.json'
+        let dataRequestUrl = getGettyDetailUrl(uri)
         let dataRequest = fetch(dataRequestUrl);
         requests.push({
           url: dataRequestUrl,
@@ -167,13 +174,13 @@ main = (payload) => {
               // save conceptName
               newCdata.conceptName = originalCdata.conceptName;
               // save conceptURI
-              newCdata.conceptURI = resultJSON.id;
+              newCdata.conceptURI = resultJSON.uri;
               // save conceptGeoJSON
               let conceptGeoJSON = GettyUtil.getGeoJSONFromGettyJSON(resultJSON);
               if (conceptGeoJSON)
                 newCdata.conceptGeoJSON = conceptGeoJSON;
               // save conceptSource
-              var conceptSource = (resultJSON.id.match(/http:\/\/vocab\.getty\.edu\/([^\/]+)/) || [])[1] || null;
+              var conceptSource = (resultJSON.uri.match(/http:\/\/vocab\.getty\.edu\/([^\/]+)/) || [])[1] || null;
               newCdata.conceptSource = conceptSource;
               // save _fulltext
               newCdata._fulltext = GettyUtil.getFullTextFromGettyJSON(resultJSON, databaseLanguages);
@@ -283,8 +290,7 @@ outputErr = (err2) => {
       // availabilityCheck for k10plus-api
       ////////////////////////////////////////////////////////////////////////////
 
-      encodedGettyURL = encodeURIComponent('https://vocab.getty.edu/tgn/7000084.json')
-      testURL = 'https://jsontojsonp.gbv.de/?url=' + encodedGettyURL
+      testURL = getGettyDetailUrl('http://vocab.getty.edu/tgn/7000084')
 
       https.get(testURL, res => {
         let testData = [];
@@ -294,7 +300,7 @@ outputErr = (err2) => {
         res.on('end', () => {
           testData = Buffer.concat(testData).toString();
           const testJSON = JSON.parse(testData);
-          if (testJSON && testData.includes('"Deutschland"')) {
+          if (testJSON && testData.includes('"Germany"')) {
             ////////////////////////////////////////////////////////////////////////////
             // test successfull --> continue with custom-data-type-update
             ////////////////////////////////////////////////////////////////////////////

@@ -48,13 +48,33 @@ class GettyUtil
       return false
     
   ########################################################################
+  # picks the best matching label from a JSKOS prefLabel/altLabel-map
+  # (e.g. {"en": "Germany", "de": "Deutschland"}) for the given language
+  ########################################################################
+  @getLocalizedLabel: (labelMap, language) ->
+    return '' unless labelMap
+
+    if language and labelMap[language]
+      return labelMap[language]
+
+    if language
+      shortenedLanguage = language.split('-')[0]
+      if labelMap[shortenedLanguage]
+        return labelMap[shortenedLanguage]
+
+    if labelMap['en']
+      return labelMap['en']
+
+    for key, value of labelMap
+      return value
+
+    return ''
+
+
+  ########################################################################
   #generates a json-structure, which is only used for facetting (aka filter) in frontend
   ########################################################################
   @getFacetTerm: (data, databaseLanguages) ->
-
-    shortenedDatabaseLanguages = databaseLanguages.map((value, key, array) ->
-      value.split('-').shift()
-    )
 
     _facet_term = {}
     l10nObject = {}
@@ -63,10 +83,10 @@ class GettyUtil
     for language in databaseLanguages
       l10nObject[language] = ''
 
-    # build facetTerm upon prefLabel and uri!    
-    label = data?._label || ''
+    # build facetTerm upon prefLabel and uri!
     for l10nObjectKey, l10nObjectValue of l10nObject
-      l10nObject[l10nObjectKey] = label + '@$@' + data.id
+      label = @getLocalizedLabel(data?.prefLabel, l10nObjectKey)
+      l10nObject[l10nObjectKey] = label + '@$@' + data.uri
 
     # if l10n-object is not empty
     _facet_term = l10nObject
@@ -101,10 +121,10 @@ class GettyUtil
     #  give l10n-languages the easydb-language-syntax
     for l10nObjectKey, l10nObjectValue of l10nObject
       # add to l10n
-      l10nObject[l10nObjectKey] = object._label
+      l10nObject[l10nObjectKey] = @getLocalizedLabel(object.prefLabel, l10nObjectKey)
 
     _standard.l10ntext = l10nObject
-    
+
     geoJSON = @getGeoJSONFromGettyJSON object
     if geoJSON
        _standard.geo =  geoJSON
@@ -135,16 +155,21 @@ class GettyUtil
     for language in shortenedDatabaseLanguages
       l10nObjectWithShortenedLanguages[language] = ''
 
-    # preflabel to all languages
-    fullTextString += object._label + ' '
-    # identifier to fulltext
-    fullTextString += object.id + ' '
+    # preflabel (all language-variants) to fulltext
+    if object.prefLabel
+      for labelLanguage, labelValue of object.prefLabel
+        fullTextString += labelValue + ' '
 
-    # parse all altlabels
-    if object.identified_by
-      for altInfo in object.identified_by
-        if altInfo.content
-            fullTextString += altInfo.content + ' '
+    # identifier to fulltext
+    fullTextString += object.uri + ' '
+    if object.notation
+      fullTextString += object.notation.join(' ') + ' '
+
+    # altLabel (variant names), falls vom Dienst (noch) geliefert
+    if object.altLabel
+      for altLabelLanguage, altLabelValues of object.altLabel
+        if Array.isArray(altLabelValues)
+          fullTextString += altLabelValues.join(' ') + ' '
 
     for l10nObjectWithShortenedLanguagesKey, l10nObjectWithShortenedLanguagesValue of l10nObjectWithShortenedLanguages
       l10nObjectWithShortenedLanguages[l10nObjectWithShortenedLanguagesKey] = fullTextString
@@ -164,26 +189,5 @@ class GettyUtil
 
 
   @getGeoJSONFromGettyJSON: (object) ->
-        
-    geoJSON = false
-
-    if object?.type == 'Place'
-      if object?.identified_by
-        for objectKey, objectValue of object.identified_by
-          if objectValue?.type == 'crm:E47_Spatial_Coordinates'
-            if objectValue?.classified_as?.id = 'http://geojson.org'
-                if objectValue?.value
-                    coordinates = JSON.parse(objectValue.value);
-                    isValidCoordinates = (Array.isArray(coordinates) and (coordinates.length == 2) and coordinates.every (coord) -> typeof coord == 'number')
-                    if isValidCoordinates
-                      geoJSON =
-                        type: "Point"
-                        coordinates: coordinates
-
-    if geoJSON
-      geoJSON =       
-        type: "Feature"      
-        properties: {},      
-        geometry: geoJSON 
-
-    return geoJSON
+    # das neue JSKOS-Format (uri.gbv.de/terminology/getty) liefert aktuell keine Geo-Koordinaten mehr
+    return false

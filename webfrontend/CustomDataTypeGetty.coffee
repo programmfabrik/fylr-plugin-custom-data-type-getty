@@ -21,8 +21,9 @@ class CustomDataTypeGetty extends CustomDataTypeWithCommonsAsPlugin
 
   #######################################################################
   # support geostandard in frontend?
+  # die neue jskos-api (uri.gbv.de/terminology/getty) liefert keine Geo-Koordinaten mehr
   supportsGeoStandard: ->
-    return true
+    return false
     
   #######################################################################
   # returns the databaseLanguages
@@ -51,7 +52,19 @@ class CustomDataTypeGetty extends CustomDataTypeWithCommonsAsPlugin
     # Überprüfen, ob die re-codierte URI der ursprünglichen entspricht
     return reEncodedUri == uri.replace(/%20/g, '+')
 
-    
+  #######################################################################
+  # builds the detail-url for a getty-concept-uri against the new jskos-api
+  __getGettyDetailUrl: (uri) ->
+    if isUriEncoded(uri)
+        uri = decodeURIComponent(uri)
+
+    uriParts = uri.split('/')
+    gettyID = uriParts.pop()
+    gettyType = uriParts.pop()
+
+    return 'https://uri.gbv.de/terminology/getty/' + gettyType + '/' + gettyID + '?format=json'
+
+
   #######################################################################
   # get more info about record
   __getAdditionalTooltipInfo: (uri, tooltip, extendedInfo_xhr) ->
@@ -61,66 +74,58 @@ class CustomDataTypeGetty extends CustomDataTypeWithCommonsAsPlugin
       # abort eventually running request
       extendedInfo_xhr.abort()
 
-    if isUriEncoded(uri)
-        uri = decodeURIComponent(uri)
-        
-    uriParts = uri.split('/')
-    gettyID = uriParts.pop()
-    gettyType = uriParts.pop()
-
-    uri = 'http://vocab.getty.edu/' + gettyType + '/' + gettyID + '.json'
-    
     # start new request
-    xurl = 'https://jsontojsonp.gbv.de/?url=' + uri
-    
+    xurl = that.__getGettyDetailUrl(uri)
+
     extendedInfo_xhr = new (CUI.XHR)(url: xurl)
     extendedInfo_xhr.start()
     .done((data, status, statusText) ->
       if data
+        frontendLanguage = that.getFrontendLanguage()
+
         htmlContent = '<span style="padding: 10px 10px 0px 10px; font-weight: bold">' + $$('custom.data.type.getty.config.parameter.mask.infopop.info.label') + '</span>'
         htmlContent += '<table style="border-spacing: 10px; border-collapse: separate;">'
 
         # uri
         htmlContent += "<tr><td>" + $$('custom.data.type.getty.config.parameter.mask.infopop.labels.uri') + ":</td>"
-        htmlContent += "<td>" + data.id + "</td></tr>"
+        htmlContent += "<td>" + data.uri + "</td></tr>"
 
         # preflabel
         htmlContent += "<tr><td>" + $$('custom.data.type.getty.config.parameter.mask.infopop.labels.preflabel') + ":</td>"
-        htmlContent += "<td>" + data._label + "</td></tr>"
+        htmlContent += "<td>" + GettyUtil.getLocalizedLabel(data.prefLabel, frontendLanguage) + "</td></tr>"
 
-        # broader
-        if data?.broader
-          htmlContent += "<tr><td>" + $$('custom.data.type.getty.config.parameter.mask.infopop.labels.broader') + ":</td>"
-          if data.broader[0]?._label['@value']
-            broaderString = data.broader[0]._label['@value'];
-          else if data.broader[0]?._label
-            broaderString = data.broader[0]._label;
-          broaderString = broaderString.replace('<', '')
-          broaderString = broaderString.replace('>', '')
-          htmlContent += "<td>" + broaderString + "</td></tr>"
+        # ancestors
+        if data?.ancestors?[0]
+          # foreach ancestors
+          ancestorStrings = []
+          htmlContent += "<tr><td>" + $$('custom.data.type.getty.config.parameter.mask.infopop.labels.ancestors') + ":</td>"
+          for ancestor in data.ancestors
+            # if preflabel exists, use preflabel, else uri
+            if ancestor?.prefLabel
+              ancestorString = GettyUtil.getLocalizedLabel(ancestor.prefLabel, frontendLanguage)
+            else
+              ancestorString = ancestor.uri
+            ancestorString = ancestorString.replace('<', '')
+            ancestorString = ancestorString.replace('>', '')
+            ancestorStrings.push(ancestorString)
+          htmlContent += "<td>" + ancestorStrings.join('<br />') + "</td></tr>"
 
-        # labels
-        htmlContent += "<tr><td>" + $$('custom.data.type.getty.config.parameter.mask.infopop.labels.label') + ":</td>"
-        labels = []
-        if data.identified_by
-          for altInfo in data.identified_by
-            if (altInfo.type == 'Name')
-              labels.push('- ' + altInfo.content)
-        htmlContent += "<td>" + labels.join('<br />') + "</td></tr>"
+        # labels (altLabel, falls vom Dienst geliefert)
+        if data.altLabel
+          htmlContent += "<tr><td>" + $$('custom.data.type.getty.config.parameter.mask.infopop.labels.label') + ":</td>"
+          labels = []
+          for altLabelLanguage, altLabelValues of data.altLabel
+            if Array.isArray(altLabelValues)
+              for altLabelValue in altLabelValues
+                labels.push('- ' + altLabelValue)
+          htmlContent += "<td>" + labels.join('<br />') + "</td></tr>"
 
-        # note
-        notes = []
-        if data.subject_of
-          for info in data.subject_of
-            if info?.classified_as
-              if info.classified_as[0]._label == 'descriptive note'
-                language = info.language[0]._label
-                if that.getFrontendLanguage() == language || language == 'en'
-                  notes.push info.content
-
-        if notes.length > 0
-          htmlContent += "<tr><td>" + $$('custom.data.type.getty.config.parameter.mask.infopop.labels.note') + ":</td>"
-          htmlContent += "<td>" + notes.join('<br />') + "</td></tr>"
+        # note (scopeNote)
+        if data.scopeNote
+          notes = data.scopeNote[frontendLanguage] || data.scopeNote['en']
+          if notes?.length > 0            
+            htmlContent += "<tr><td>" + $$('custom.data.type.getty.config.parameter.mask.infopop.labels.note') + ":</td>"
+            htmlContent += "<td>" + notes.join('<br />') + "</td></tr>"
 
         htmlContent += "</table>"
         tooltip.DOM.innerHTML = htmlContent
@@ -233,8 +238,7 @@ class CustomDataTypeGetty extends CustomDataTypeWithCommonsAsPlugin
               cdata.conceptName = btn.getText()
 
               # try to get better fulltext
-              encodedURL = encodeURIComponent(cdata.conceptURI + '.json')
-              dataEntry_xhr = new (CUI.XHR)(url: 'https://jsontojsonp.gbv.de/?url=' + encodedURL)
+              dataEntry_xhr = new (CUI.XHR)(url: that.__getGettyDetailUrl(cdata.conceptURI))
               dataEntry_xhr.start().done((data, status, statusText) ->
 
                 # _standard & _fulltext

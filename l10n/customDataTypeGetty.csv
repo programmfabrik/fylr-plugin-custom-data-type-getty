@@ -29,7 +29,7 @@ custom.data.type.getty.config.parameter.schema.add_tgn.value.checkbox,Getty Thes
 custom.data.type.getty.config.parameter.schema.add_ulan.value.checkbox,Union List of Artist Names,Union List of Artist Names,,
 custom.data.type.getty.url.tooltip,zu **%(name)s** bei Getty Vocabularies springen,jump to **%(name)s** at Getty Vocabularies,,
 custom.data.type.getty.config.parameter.mask.infopop.labels.uri,Identifier,Identifier,,
-custom.data.type.getty.config.parameter.mask.infopop.labels.broader,Übergeordnet,Broader,,
+custom.data.type.getty.config.parameter.mask.infopop.labels.ancestors,Eltern,Ancestors,,
 custom.data.type.getty.config.parameter.mask.infopop.labels.preflabel,Bezeichnung,Preferred label,,
 custom.data.type.getty.config.parameter.mask.infopop.labels.note,Notiz,Note,,
 custom.data.type.getty.config.parameter.schema.start_parent_id.value.label,startParentID,startParentID,,
